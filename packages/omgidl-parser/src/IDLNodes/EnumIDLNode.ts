@@ -1,27 +1,21 @@
 import { IDLNode, toScopedIdentifier } from "./IDLNode";
-import { AnyIDLNode, IConstantIDLNode, IEnumIDLNode } from "./interfaces";
+import { IConstantIDLNode, IEnumIDLNode } from "./interfaces";
 import { EnumASTNode } from "../astTypes";
 import { IDLMessageDefinition } from "../types";
 
 /** Class used to resolve an Enum ASTNode to an IDLMessageDefinition */
 
 export class EnumIDLNode extends IDLNode<EnumASTNode> implements IEnumIDLNode {
-  constructor(scopePath: string[], astNode: EnumASTNode, idlMap: Map<string, AnyIDLNode>) {
-    super(scopePath, astNode, idlMap);
-  }
+  readonly type: string = "uint32";
 
-  get type(): string {
-    return "uint32";
-  }
-
-  private enumeratorNodes(): IConstantIDLNode[] {
+  #enumeratorNodes(): IConstantIDLNode[] {
     return this.astNode.enumerators.map((enumerator) =>
       this.getConstantNode(toScopedIdentifier([...this.scopePath, this.name, enumerator.name])),
     );
   }
 
   public toIDLMessageDefinition(): IDLMessageDefinition {
-    const definitions = this.enumeratorNodes().map((enumerator) =>
+    const definitions = this.#enumeratorNodes().map((enumerator) =>
       enumerator.toIDLMessageDefinitionField(),
     );
     return {

@@ -1,4 +1,4 @@
-import { MessageDefinition, MessageDefinitionField } from "@foxglove/message-definition";
+import { MessageDefinition, MessageDefinitionField } from "@lichtblick/message-definition";
 
 import { AnyAnnotation } from "./astTypes";
 

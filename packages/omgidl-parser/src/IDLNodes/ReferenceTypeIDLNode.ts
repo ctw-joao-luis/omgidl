@@ -28,21 +28,21 @@ export abstract class ReferenceTypeIDLNode<T extends TypedefASTNode | StructMemb
   implements IReferenceTypeIDLNode<T>
 {
   /** Indicates that it references another typedef, enum or struct. (ie: uses a non-builtin / simple type) */
-  private typeNeedsResolution = false;
+  #typeNeedsResolution = false;
   /** Used to hold an optional referenced node if needsResolution==true. Resolved/Set with `typeRef()` function.
    * Not meant to be used outside of `typeRef()` function.
    */
-  private typeRefNode?: PossibleTypeRefNode;
+  #typeRefNode?: PossibleTypeRefNode;
   constructor(scopePath: string[], astNode: T, idlMap: Map<string, AnyIDLNode>) {
     super(scopePath, astNode, idlMap);
     if (!SIMPLE_TYPES.has(astNode.type)) {
-      this.typeNeedsResolution = true;
+      this.#typeNeedsResolution = true;
     }
   }
 
   get type(): string {
-    if (this.typeNeedsResolution) {
-      const parent = this.typeRef();
+    if (this.#typeNeedsResolution) {
+      const parent = this.#typeRef();
       if (parent.declarator === "typedef" || parent.declarator === "enum") {
         return parent.type;
       }
@@ -52,10 +52,10 @@ export abstract class ReferenceTypeIDLNode<T extends TypedefASTNode | StructMemb
   }
 
   get isComplex(): boolean {
-    if (!this.typeNeedsResolution) {
+    if (!this.#typeNeedsResolution) {
       return false;
     }
-    const parent = this.typeRef();
+    const parent = this.#typeRef();
     if (parent.declarator === "typedef") {
       return parent.isComplex;
     }
@@ -65,8 +65,8 @@ export abstract class ReferenceTypeIDLNode<T extends TypedefASTNode | StructMemb
   get isArray(): boolean | undefined {
     let isArray = this.astNode.isArray;
 
-    if (this.typeNeedsResolution) {
-      const parent = this.typeRef();
+    if (this.#typeNeedsResolution) {
+      const parent = this.#typeRef();
       if (parent.declarator === "typedef") {
         isArray ||= parent.isArray;
       }
@@ -78,8 +78,8 @@ export abstract class ReferenceTypeIDLNode<T extends TypedefASTNode | StructMemb
     // Arraylengths are composed such that the prior arrayLengths describe the outermost arrays.
     // This means that the arrayLengths on the typedef should be pushed to the end as innermost arrayLengths.
     const arrayLengths = this.astNode.arrayLengths ? [...this.astNode.arrayLengths] : [];
-    if (this.typeNeedsResolution) {
-      const parent = this.typeRef();
+    if (this.#typeNeedsResolution) {
+      const parent = this.#typeRef();
       if (parent.declarator === "typedef" && parent.arrayLengths) {
         arrayLengths.push(...parent.arrayLengths);
       }
@@ -87,7 +87,7 @@ export abstract class ReferenceTypeIDLNode<T extends TypedefASTNode | StructMemb
     const finalArrayLengths: number[] = [];
     // Resolve constant usage in arraylengths
     for (const arrayLength of arrayLengths) {
-      const resolvedArrayLength = this.resolvePossibleNumericConstantUsage(arrayLength);
+      const resolvedArrayLength = this.#resolvePossibleNumericConstantUsage(arrayLength);
       // Shouldn't return undefined since the arrayLengths array should never include undefined
       if (resolvedArrayLength != undefined) {
         finalArrayLengths.push(resolvedArrayLength);
@@ -98,8 +98,8 @@ export abstract class ReferenceTypeIDLNode<T extends TypedefASTNode | StructMemb
 
   get arrayUpperBound(): number | undefined {
     let arrayUpperBound = undefined;
-    if (this.typeNeedsResolution) {
-      const parent = this.typeRef();
+    if (this.#typeNeedsResolution) {
+      const parent = this.#typeRef();
       if (parent.declarator === "typedef") {
         arrayUpperBound = parent.arrayUpperBound;
       }
@@ -109,13 +109,13 @@ export abstract class ReferenceTypeIDLNode<T extends TypedefASTNode | StructMemb
       arrayUpperBound = this.astNode.arrayUpperBound;
     }
 
-    return this.resolvePossibleNumericConstantUsage(arrayUpperBound);
+    return this.#resolvePossibleNumericConstantUsage(arrayUpperBound);
   }
 
   get upperBound(): number | undefined {
     let upperBound = undefined;
-    if (this.typeNeedsResolution) {
-      const parent = this.typeRef();
+    if (this.#typeNeedsResolution) {
+      const parent = this.#typeRef();
       if (parent.declarator === "typedef") {
         upperBound = parent.upperBound;
       }
@@ -125,13 +125,13 @@ export abstract class ReferenceTypeIDLNode<T extends TypedefASTNode | StructMemb
       upperBound = this.astNode.upperBound;
     }
     // Check for constant usage
-    return this.resolvePossibleNumericConstantUsage(upperBound);
+    return this.#resolvePossibleNumericConstantUsage(upperBound);
   }
 
   get annotations(): BaseASTNode["annotations"] {
     let annotations = undefined;
-    if (this.typeNeedsResolution) {
-      const parent = this.typeRef();
+    if (this.#typeNeedsResolution) {
+      const parent = this.#typeRef();
       // We do not want to inherit annotations from a struct or enum
       if (parent.declarator === "typedef" && parent.annotations != undefined) {
         annotations = { ...parent.annotations };
@@ -144,7 +144,7 @@ export abstract class ReferenceTypeIDLNode<T extends TypedefASTNode | StructMemb
     return annotations;
   }
 
-  private resolvePossibleNumericConstantUsage(
+  #resolvePossibleNumericConstantUsage(
     astValue: UnresolvedConstantValue | number | undefined,
   ): number | undefined {
     if (typeof astValue === "number" || astValue == undefined) {
@@ -163,7 +163,7 @@ export abstract class ReferenceTypeIDLNode<T extends TypedefASTNode | StructMemb
   }
 
   /** Gets Node with the given name in the current instance's scope and checks that it is a valid type reference node */
-  private getValidTypeReference(typeName: string): PossibleTypeRefNode {
+  #getValidTypeReference(typeName: string): PossibleTypeRefNode {
     const maybeValidParent = this.getNode(this.scopePath, typeName);
     if (
       !(maybeValidParent.declarator === "struct") &&
@@ -182,26 +182,28 @@ export abstract class ReferenceTypeIDLNode<T extends TypedefASTNode | StructMemb
    * Only to be used when needsResolution==true and the `type` on the astNode is not "simple".
    * Also checks the parent against current serialization limitations. (ie: we do not support composing variable length arrays with typedefs)
    */
-  private typeRef(): PossibleTypeRefNode {
-    if (this.typeRefNode == undefined) {
-      this.typeRefNode = this.getValidTypeReference(this.astNode.type);
+  #typeRef(): PossibleTypeRefNode {
+    if (this.#typeRefNode == undefined) {
+      this.#typeRefNode = this.#getValidTypeReference(this.astNode.type);
     }
 
-    if (!(this.typeRefNode instanceof ReferenceTypeIDLNode)) {
-      return this.typeRefNode;
+    if (!(this.#typeRefNode instanceof ReferenceTypeIDLNode)) {
+      return this.#typeRefNode;
     }
 
     // check potential errors
-    if (this.astNode.isArray === true && this.typeRefNode.isArray === true) {
+    if (this.astNode.isArray === true && this.#typeRefNode.isArray === true) {
       const thisNodeIsFixedSize = this.astNode.arrayLengths != undefined;
-      const parentNodeIsFixedSize = this.typeRefNode.arrayLengths != undefined;
+      const parentNodeIsFixedSize = this.#typeRefNode.arrayLengths != undefined;
       if (!thisNodeIsFixedSize || !parentNodeIsFixedSize) {
         throw new Error(
-          `We do not support composing variable length arrays with typedefs: ${this.scopedIdentifier} referencing ${this.typeRefNode.scopedIdentifier}`,
+          `We do not support composing variable length arrays with typedefs: ${
+            this.scopedIdentifier
+          } referencing ${this.#typeRefNode.scopedIdentifier}`,
         );
       }
     }
 
-    return this.typeRefNode;
+    return this.#typeRefNode;
   }
 }

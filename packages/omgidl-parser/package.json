@@ -1,11 +1,11 @@
 {
-  "name": "@foxglove/omgidl-parser",
-  "version": "1.0.5",
+  "name": "@lichtblick/omgidl-parser",
+  "version": "1.0.0",
   "description": "Parse OMG IDL to flattened definitions for serialization",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/foxglove/omgidl.git"
+    "url": "https://github.com/lichtblick-suite/omgidl"
   },
   "keywords": [
     "nearley",
@@ -21,9 +21,9 @@
     "mcap"
   ],
   "author": {
-    "name": "Foxglove",
-    "email": "contact@foxglove.dev",
-    "url": "https://foxglove.dev/"
+    "name": "Lichtblick",
+    "email": "lichtblick@bmwgroup.com",
+    "url": "https://github.com/lichtblick-suite/omgidl"
   },
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -45,8 +45,8 @@
     "tslib": "^2"
   },
   "devDependencies": {
-    "@foxglove/message-definition": "^0.3.1",
-    "@foxglove/tsconfig": "2.0.0",
+    "@lichtblick/message-definition": "^1.0.0",
+    "@lichtblick/tsconfig": "1.0.0",
     "@types/jest": "29.4.0",
     "@types/nearley": "^2.11.5",
     "jest": "29.4.2",
@@ -57,7 +57,7 @@
     "rimraf": "5.0.5",
     "ts-jest": "29.1.4",
     "ts-loader": "^9.5.0",
-    "typescript": "5.2.2",
+    "typescript": "5.3.3",
     "webpack": "^5.89.0",
     "webpack-cli": "^5.1.4"
   }

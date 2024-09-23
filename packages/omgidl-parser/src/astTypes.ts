@@ -1,4 +1,4 @@
-import { ConstantValue, MessageDefinitionField } from "@foxglove/message-definition";
+import { ConstantValue, MessageDefinitionField } from "@lichtblick/message-definition";
 
 /** Internal Types returned by parseIDLToAST
  * These types contain unresolved type and constant values.

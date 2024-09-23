@@ -1,4 +1,4 @@
-import { IDLMessageDefinition, IDLMessageDefinitionField } from "@foxglove/omgidl-parser";
+import { IDLMessageDefinition, IDLMessageDefinitionField } from "@lichtblick/omgidl-parser";
 
 import {
   DeserializationInfoCache,

@@ -6,11 +6,13 @@ import { INTEGER_TYPES, SIMPLE_TYPES, normalizeType } from "../primitiveTypes";
 import { Case, IDLMessageDefinition, IDLMessageDefinitionField } from "../types";
 
 export class UnionIDLNode extends IDLNode<UnionASTNode> implements IUnionIDLNode {
-  private switchTypeNeedsResolution = false;
+  #switchTypeNeedsResolution = false;
+  readonly isComplex: boolean = true;
+
   constructor(scopePath: string[], astNode: UnionASTNode, idlMap: Map<string, AnyIDLNode>) {
     super(scopePath, astNode, idlMap);
     if (!SIMPLE_TYPES.has(this.astNode.switchType)) {
-      this.switchTypeNeedsResolution = true;
+      this.#switchTypeNeedsResolution = true;
     }
   }
 
@@ -18,14 +20,10 @@ export class UnionIDLNode extends IDLNode<UnionASTNode> implements IUnionIDLNode
     return this.astNode.name;
   }
 
-  get isComplex(): boolean {
-    return true;
-  }
-
-  private _switchTypeNode?: IEnumIDLNode | ITypedefIDLNode;
+  #switchTypeNode?: IEnumIDLNode | ITypedefIDLNode;
   switchTypeNode(): IEnumIDLNode | ITypedefIDLNode {
-    if (this._switchTypeNode) {
-      return this._switchTypeNode;
+    if (this.#switchTypeNode) {
+      return this.#switchTypeNode;
     }
     const typeNode = this.getNode(this.scopePath, this.astNode.switchType);
     if (typeNode.declarator !== "enum" && typeNode.declarator !== "typedef") {
@@ -33,13 +31,13 @@ export class UnionIDLNode extends IDLNode<UnionASTNode> implements IUnionIDLNode
         `Invalid switch type "${typeNode.scopedIdentifier}" ${this.astNode.switchType} in ${this.scopedIdentifier}`,
       );
     }
-    this._switchTypeNode = typeNode;
+    this.#switchTypeNode = typeNode;
     return typeNode;
   }
 
   get switchType(): string {
     let switchType = this.astNode.switchType;
-    if (this.switchTypeNeedsResolution) {
+    if (this.#switchTypeNeedsResolution) {
       switchType = this.switchTypeNode().type;
     }
     if (!isValidSwitchType(switchType)) {
@@ -52,7 +50,7 @@ export class UnionIDLNode extends IDLNode<UnionASTNode> implements IUnionIDLNode
     // If the switch type is an enum that means the case predicate values can be just the enumerator name
     // So we need to search the scope of the enum for the enumerator and get its value
     const isEnumSwitchType =
-      this.switchTypeNeedsResolution && this.switchTypeNode().declarator === "enum";
+      this.#switchTypeNeedsResolution && this.switchTypeNode().declarator === "enum";
     const predicateScopePath = isEnumSwitchType
       ? this.switchTypeNode().scopedIdentifier.split("::")
       : this.scopePath;

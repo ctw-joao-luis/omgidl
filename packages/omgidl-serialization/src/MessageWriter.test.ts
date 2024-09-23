@@ -1,4 +1,4 @@
-import { parseIDL } from "@foxglove/omgidl-parser";
+import { parseIDL } from "@lichtblick/omgidl-parser";
 
 import { MessageWriter } from "./MessageWriter";
 

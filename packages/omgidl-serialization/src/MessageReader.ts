@@ -1,9 +1,9 @@
-import { CdrReader } from "@foxglove/cdr";
+import { CdrReader } from "@lichtblick/cdr";
 import {
   IDLMessageDefinition,
   IDLMessageDefinitionField,
   IDLUnionDefinition,
-} from "@foxglove/omgidl-parser";
+} from "@lichtblick/omgidl-parser";
 
 import {
   ComplexDeserializationInfo,
@@ -41,13 +41,13 @@ export class MessageReader<T = unknown> {
     const usesDelimiterHeader = reader.usesDelimiterHeader;
     const usesMemberHeader = reader.usesMemberHeader;
 
-    return this.readAggregatedType(this.rootDeserializationInfo, reader, {
+    return this.#readAggregatedType(this.rootDeserializationInfo, reader, {
       usesDelimiterHeader,
       usesMemberHeader,
     }) as R;
   }
 
-  private readAggregatedType(
+  #readAggregatedType(
     deserInfo: ComplexDeserializationInfo,
     reader: CdrReader,
     options: HeaderOptions,
@@ -65,8 +65,8 @@ export class MessageReader<T = unknown> {
 
     const msg =
       deserInfo.type === "struct"
-        ? this.readStructType(deserInfo, reader, options)
-        : this.readUnionType(deserInfo, reader, options);
+        ? this.#readStructType(deserInfo, reader, options)
+        : this.#readUnionType(deserInfo, reader, options);
 
     if (readMemberHeader && this.#unusedEmHeader?.readSentinelHeader !== true) {
       reader.sentinelHeader();
@@ -77,7 +77,7 @@ export class MessageReader<T = unknown> {
     return msg;
   }
 
-  private readStructType(
+  #readStructType(
     deserInfo: StructDeserializationInfo,
     reader: CdrReader,
     options: HeaderOptions,
@@ -86,7 +86,7 @@ export class MessageReader<T = unknown> {
 
     const msg: Record<string, unknown> = {};
     for (const field of deserInfo.fields) {
-      msg[field.name] = this.readMemberFieldValue(
+      msg[field.name] = this.#readMemberFieldValue(
         field,
         reader,
         {
@@ -99,7 +99,7 @@ export class MessageReader<T = unknown> {
     return msg;
   }
 
-  private readUnionType(
+  #readUnionType(
     deserInfo: UnionDeserializationInfo,
     reader: CdrReader,
     options: HeaderOptions,
@@ -140,7 +140,7 @@ export class MessageReader<T = unknown> {
 
     return {
       [UNION_DISCRIMINATOR_PROPERTY_KEY]: discriminatorValue,
-      [caseDefType.name]: this.readMemberFieldValue(
+      [caseDefType.name]: this.#readMemberFieldValue(
         fieldDeserInfo,
         reader,
         {
@@ -159,7 +159,7 @@ export class MessageReader<T = unknown> {
    **/
   #unusedEmHeader?: ReturnType<CdrReader["emHeader"]>;
 
-  private readMemberFieldValue(
+  #readMemberFieldValue(
     field: FieldDeserializationInfo,
     reader: CdrReader,
     emHeaderOptions: { readMemberHeader: boolean; parentName?: string },
@@ -197,7 +197,7 @@ export class MessageReader<T = unknown> {
       if (field.isArray === true) {
         // For dynamic length arrays we need to read a uint32 prefix
         const arrayLengths = field.arrayLengths ?? [reader.sequenceLength()];
-        return this.readComplexNestedArray(
+        return this.#readComplexNestedArray(
           reader,
           childOptions,
           field.typeDeserInfo,
@@ -205,7 +205,7 @@ export class MessageReader<T = unknown> {
           0,
         );
       } else {
-        return this.readAggregatedType(
+        return this.#readAggregatedType(
           field.typeDeserInfo,
           reader,
           childOptions,
@@ -238,6 +238,7 @@ export class MessageReader<T = unknown> {
         } else {
           return deser(reader, arrayLengths[0]!);
         }
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       } else if (field.typeDeserInfo.type === "primitive") {
         return field.typeDeserInfo.deserialize(
           reader,
@@ -249,7 +250,7 @@ export class MessageReader<T = unknown> {
     }
   }
 
-  private readComplexNestedArray(
+  #readComplexNestedArray(
     reader: CdrReader,
     options: HeaderOptions,
     deserInfo: ComplexDeserializationInfo,
@@ -263,10 +264,10 @@ export class MessageReader<T = unknown> {
     const array = [];
     for (let i = 0; i < arrayLengths[depth]!; i++) {
       if (depth === arrayLengths.length - 1) {
-        array.push(this.readAggregatedType(deserInfo, reader, options));
+        array.push(this.#readAggregatedType(deserInfo, reader, options));
       } else {
         array.push(
-          this.readComplexNestedArray(reader, options, deserInfo, arrayLengths, depth + 1),
+          this.#readComplexNestedArray(reader, options, deserInfo, arrayLengths, depth + 1),
         );
       }
     }

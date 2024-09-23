@@ -1,12 +1,12 @@
 module.exports = {
   root: true,
-  extends: ["plugin:@foxglove/base", "plugin:@foxglove/jest"],
+  extends: ["plugin:@lichtblick/base", "plugin:@lichtblick/jest"],
   env: { node: true },
   ignorePatterns: ["dist"],
   overrides: [
     {
       files: ["*.ts", "*.tsx"],
-      extends: ["plugin:@foxglove/typescript"],
+      extends: ["plugin:@lichtblick/typescript"],
       parserOptions: { project: "tsconfig.json", tsconfigRootDir: __dirname },
     },
   ],

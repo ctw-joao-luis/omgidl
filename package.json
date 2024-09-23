@@ -1,12 +1,12 @@
 {
-  "name": "@foxglove/omg-support",
+  "name": "@lichtblick/omg-support",
   "private": true,
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/foxglove/omgidl.git"
+    "url": "https://github.com/lichtblick-suite/omgidl"
   },
   "scripts": {
     "clean": "yarn workspaces foreach run clean",
@@ -14,12 +14,12 @@
     "lint": "yarn workspaces foreach run lint --color",
     "lint:ci": "yarn workspaces foreach run lint:ci",
     "build": "yarn workspaces foreach run build",
-    "parser:test": "yarn workspace @foxglove/omgidl-parser test",
-    "parser:build": "yarn workspace @foxglove/omgidl-parser build",
-    "serde:test": "yarn workspace @foxglove/omgidl-serialization test",
-    "serde:build": "yarn workspace @foxglove/omgidl-serialization build",
-    "ros2idl:test": "yarn workspace @foxglove/ros2idl-parser test",
-    "ros2idl:build": "yarn workspace @foxglove/ros2idl-parser build"
+    "parser:test": "yarn workspace @lichtblick/omgidl-parser test",
+    "parser:build": "yarn workspace @lichtblick/omgidl-parser build",
+    "serde:test": "yarn workspace @lichtblick/omgidl-serialization test",
+    "serde:build": "yarn workspace @lichtblick/omgidl-serialization build",
+    "ros2idl:test": "yarn workspace @lichtblick/ros2idl-parser test",
+    "ros2idl:build": "yarn workspace @lichtblick/ros2idl-parser build"
   },
   "workspaces": [
     "packages/*"
@@ -32,16 +32,17 @@
     ]
   },
   "author": {
-    "name": "Foxglove",
-    "email": "contact@foxglove.dev",
-    "url": "https://foxglove.dev/"
+    "name": "Lichtblick",
+    "email": "lichtblick@bmwgroup.com",
+    "url": "https://github.com/Lichtblick-Suite/"
   },
   "packageManager": "yarn@3.3.1",
   "devDependencies": {
-    "@foxglove/eslint-plugin": "^0.22.1",
+    "@lichtblick/eslint-plugin": "^1.0.1",
+    "@lichtblick/message-definition": "^1.0.0",
     "@types/jest": "^29.5.2",
-    "@typescript-eslint/eslint-plugin": "^5.60.0",
-    "@typescript-eslint/parser": "^7.2.0",
+    "@typescript-eslint/eslint-plugin": "6.10.0",
+    "@typescript-eslint/parser": "6.10.0",
     "eslint": "8.52.0",
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-es": "^4.1.0",
@@ -52,6 +53,6 @@
     "jest": "29.6.4",
     "prettier": "2.7.1",
     "ts-jest": "29.1.4",
-    "typescript": "5.2.2"
+    "typescript": "5.3.3"
   }
 }

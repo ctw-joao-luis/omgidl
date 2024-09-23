@@ -1,5 +1,9 @@
-import { MessageDefinition, MessageDefinitionField } from "@foxglove/message-definition";
-import { IDLMessageDefinitionField, IDLMessageDefinition, parseIDL } from "@foxglove/omgidl-parser";
+import { MessageDefinition, MessageDefinitionField } from "@lichtblick/message-definition";
+import {
+  IDLMessageDefinitionField,
+  IDLMessageDefinition,
+  parseIDL,
+} from "@lichtblick/omgidl-parser";
 
 /**
  * Parses `ros2idl` schema into flattened message definitions for serialization/deserialization.
@@ -21,7 +25,7 @@ export function parseRos2idl(messageDefinition: string): MessageDefinition[] {
       field.type = normalizeName(field.type);
     }
     // Modify the definition of builtin_interfaces/msg/Time and Duration so they are interpreted as
-    // {sec: number, nsec: number}, compatible with the rest of Foxglove. The ros2idl builtin types
+    // {sec: number, nsec: number}, compatible with the rest of Lichtblick. The ros2idl builtin types
     // use "nanosec" instead of "nsec".
     if (
       def.name === "builtin_interfaces/msg/Time" ||

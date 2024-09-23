@@ -1,5 +1,5 @@
-import { CdrWriter, EncapsulationKind } from "@foxglove/cdr";
-import { parseIDL } from "@foxglove/omgidl-parser";
+import { CdrWriter, EncapsulationKind } from "@lichtblick/cdr";
+import { parseIDL } from "@lichtblick/omgidl-parser";
 
 import { MessageReader } from "./MessageReader";
 import { UNION_DISCRIMINATOR_PROPERTY_KEY } from "./constants";

@@ -1,16 +1,16 @@
-# @foxglove/omgidl-serialization
+# @lichtblick/omgidl-serialization
 
 > _OMG IDL message serialization, for reading and writing CDR and XCDR2 messages based on `.idl` schema_
 
-[![npm version](https://img.shields.io/npm/v/@foxglove/omgidl-serialization.svg?style=flat)](https://www.npmjs.com/package/@foxglove/omgidl-serialization)
+[![npm version](https://img.shields.io/npm/v/@lichtblick/omgidl-serialization.svg?style=flat)](https://www.npmjs.com/package/@lichtblick/omgidl-serialization)
 
 ## MessageReader
 
 Message reader deserializes CDR, XCDR1 and XCDR2 messages into plain objects. The messages are fully deserialized.
 
 ```typescript
-import { parseIDL } from "@foxglove/omgidl-parser";
-import { MessageReader } from "@foxglove/omgidl-serialization";
+import { parseIDL } from "@lichtblick/omgidl-parser";
+import { MessageReader } from "@lichtblick/omgidl-serialization";
 
 const msgDef = `
   module geometry_msgs {
@@ -50,7 +50,7 @@ message.header.stamp;
 Convert an object, array, or primitive value into binary data using CDR message serialization. (XCDR1 and XCDR2 writing is not yet supported.)
 
 ```Typescript
-import { MessageWriter } from "@foxglove/omgidl-serialization";
+import { MessageWriter } from "@lichtblick/omgidl-serialization";
 
 const msgDef = `
   module geometry_msgs {

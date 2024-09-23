@@ -1,8 +1,8 @@
-# @foxglove/ros2idl-parser
+# @lichtblick/ros2idl-parser
 
 > _ROS 2 `.idl` message definition parser_
 
-[![npm version](https://img.shields.io/npm/v/@foxglove/ros2idl-parser.svg?style=flat)](https://www.npmjs.com/package/@foxglove/ros2idl-parser)
+[![npm version](https://img.shields.io/npm/v/@lichtblick/ros2idl-parser.svg?style=flat)](https://www.npmjs.com/package/@lichtblick/ros2idl-parser)
 
 ## Introduction
 
@@ -11,7 +11,7 @@
 ## Usage
 
 ```Typescript
-import { parseRos2idl } from "@foxglove/ros2idl-parser";
+import { parseRos2idl } from "@lichtblick/ros2idl-parser";
 
 const ros2idlDefinitionStr = `
 ================================================================================
@@ -135,6 +135,3 @@ Prints:
 ]
 ```
 
-## Stay in touch
-
-Join our [Slack channel](https://foxglove.dev/slack) to ask questions, share feedback, and stay up to date on what our team is working on.

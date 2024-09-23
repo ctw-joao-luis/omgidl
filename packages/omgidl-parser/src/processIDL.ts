@@ -1,4 +1,4 @@
-import { ConstantValue, MessageDefinitionField } from "@foxglove/message-definition";
+import { ConstantValue, MessageDefinitionField } from "@lichtblick/message-definition";
 
 import {
   ConstantIDLNode,
@@ -73,7 +73,7 @@ function getValueAnnotation(
   return undefined;
 }
 
-/** Convert to IDL Message Definitions for serialization and compatibility with Foxglove's Raw Message panel. Returned in order of original definitions*/
+/** Convert to IDL Message Definitions for serialization and compatibility with Lichtblick's Raw Message panel. Returned in order of original definitions*/
 export function toIDLMessageDefinitions(map: Map<string, AnyIDLNode>): IDLMessageDefinition[] {
   const messageDefinitions: IDLMessageDefinition[] = [];
   const topLevelConstantDefinitions: MessageDefinitionField[] = [];
@@ -139,7 +139,9 @@ const makeIDLNode = (
 function traverseIDL(path: AnyASTNode[], processNode: (path: AnyASTNode[]) => void) {
   const currNode = path[path.length - 1]!;
   if ("definitions" in currNode) {
-    currNode.definitions.forEach((n) => traverseIDL([...path, n], processNode));
+    currNode.definitions.forEach((n) => {
+      traverseIDL([...path, n], processNode);
+    });
   }
   processNode(path);
 }

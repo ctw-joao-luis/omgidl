@@ -30,7 +30,7 @@ describe("omgidl parser tests", () => {
     struct A {
       int32 num;
     };
-    
+
     `;
     const types = parse(schema);
     expect(types).toEqual([
@@ -66,7 +66,7 @@ describe("omgidl parser tests", () => {
       sequence<uint8, 10> seq;
       string str;
     };
-    
+
     `;
     const types = parse(schema);
     expect(types).toEqual([
@@ -1662,7 +1662,7 @@ module rosidl_parser {
       GREEN,
       BLUE
     };
- 
+
     struct Line {
       COLORS color;
     };
@@ -1717,7 +1717,7 @@ module rosidl_parser {
       GREEN,
       BLUE
     };
- 
+
     module Scene {
       module DefaultColors {
         const COLORS red = COLORS::RED;
@@ -2475,7 +2475,7 @@ module rosidl_parser {
       double z;
     };
     };
-    
+
     module foxglove {
     struct Quaternion {
       double x;
@@ -2485,7 +2485,7 @@ module rosidl_parser {
       double w;
     };
     };
-    
+
     module foxglove {
     // A position and orientation for an object or reference frame in 3D space
     struct Pose {
@@ -2621,10 +2621,10 @@ module rosidl_parser {
   });
   it("can parse typedefs with annotations", () => {
     const msgDef = `
-      module Some_index {                                                                                                   
-        @min(1) @max(8) @default(1) 
-        typedef unsigned short index;                                             
-      };                                                                                                                 
+      module Some_index {
+        @min(1) @max(8) @default(1)
+        typedef unsigned short index;
+      };
       struct SomeStruct {
         Some_index::index sensor_index;
       };

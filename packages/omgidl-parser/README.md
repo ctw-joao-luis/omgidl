@@ -2,11 +2,11 @@
 
 > _OMG IDL parser to flattened message definitions for (de)serialization_
 
-[![npm version](https://img.shields.io/npm/v/@foxglove/omgidl-parser.svg?style=flat)](https://www.npmjs.com/package/@foxglove/omgidl-parser)
+[![npm version](https://img.shields.io/npm/v/@lichtblick/omgidl-parser.svg?style=flat)](https://www.npmjs.com/package/@lichtblick/omgidl-parser)
 
 This package provides functions to parse raw `.idl` schemas into resolved, flattened message definitions.
 
-Output definitions can be passed to serializers along with a specified root schema name string in `@foxglove/omgidl-serialization` to read and write CDR, XCDR1 and XCDR2 messages.
+Output definitions can be passed to serializers along with a specified root schema name string in `@lichtblick/omgidl-serialization` to read and write CDR, XCDR1 and XCDR2 messages.
 
 ## Example
 

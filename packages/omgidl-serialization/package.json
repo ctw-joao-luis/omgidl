@@ -1,6 +1,6 @@
 {
-  "name": "@foxglove/omgidl-serialization",
-  "version": "1.1.2",
+  "name": "@lichtblick/omgidl-serialization",
+  "version": "1.0.0",
   "description": "OMG IDL Schema message serializers and deserializer",
   "license": "MIT",
   "keywords": [
@@ -18,13 +18,13 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/foxglove/omgidl.git"
+    "url": "https://github.com/lichtblick-suite/omgidl"
   },
   "author": {
-    "name": "Foxglove Technologies Inc",
-    "email": "contact@foxglove.dev"
+    "name": "Lichtblick",
+    "email": "lichtblick@bmwgroup.com"
   },
-  "homepage": "https://github.com/foxglove/omgidl/packages/omgidl-serialization",
+  "homepage": "https://github.com/lichtblick-suite/omgidl",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
   "files": [
@@ -45,12 +45,12 @@
   },
   "packageManager": "yarn@3.3.1",
   "devDependencies": {
-    "@foxglove/omgidl-parser": "workspace:*",
+    "@lichtblick/omgidl-parser": "workspace:*",
     "@sounisi5011/jest-binary-data-matchers": "1.2.1",
-    "typescript": "5.2.2"
+    "typescript": "5.3.3"
   },
   "dependencies": {
-    "@foxglove/cdr": "3.3.0",
-    "@foxglove/message-definition": "^0.3.1"
+    "@lichtblick/cdr": "1.0.1",
+    "@lichtblick/message-definition": "^1.0.0"
   }
 }

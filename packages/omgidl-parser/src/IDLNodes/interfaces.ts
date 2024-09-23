@@ -1,4 +1,4 @@
-import { ConstantValue } from "@foxglove/message-definition";
+import { ConstantValue } from "@lichtblick/message-definition";
 
 import {
   BaseASTNode,
