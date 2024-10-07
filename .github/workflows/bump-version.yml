@@ -97,6 +97,11 @@ jobs:
         run: yarn version patch
         working-directory: packages/ros2idl-parser
 
+      - name: Set up Git
+        run: |
+          git config --global user.name 'github-actions'
+          git config --global user.email 'github-actions@github.com'
+
       - name: Commit version bumps
         run: |
           git add packages/**/package.json yarn.lock
