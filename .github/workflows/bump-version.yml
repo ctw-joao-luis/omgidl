@@ -3,7 +3,15 @@ name: Auto Bump Version
 on:
   push:
     branches:
-      - main  # Trigger on push to main branch
+      - main
+    paths:
+      - 'packages/omgidl-parser/**'
+      - 'packages/omgidl-serialization/**'
+      - 'packages/ros2idl-parser/**'
+
+  pull_request:
+    branches:
+      - main
     paths:
       - 'packages/omgidl-parser/**'
       - 'packages/omgidl-serialization/**'
@@ -35,16 +43,6 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-yarn-
 
-      - name: Install dependencies
-        run: yarn install --mode skip-build
-        env:
-          YARN_ENABLE_IMMUTABLE_INSTALLS: false
-
-      - name: Set up Git
-        run: |
-          git config --global user.name 'github-actions'
-          git config --global user.email 'github-actions@github.com'
-
       - name: Paths Changes Filter
         id: filter_paths
         uses: dorny/paths-filter@v3
@@ -56,6 +54,30 @@ jobs:
               - 'packages/omgidl-serialization/**'
             ros2idl_parser:
               - 'packages/ros2idl-parser/**'
+
+      # Install dependencies for 'omgidl-parser' if changes detected
+      - name: Install dependencies for omgidl-parser
+        if: steps.filter_paths.outputs.omgidl_parser == 'true'
+        run: |
+          yarn install
+          yarn plugin import version
+        working-directory: packages/omgidl-parser
+
+      # Install dependencies for 'omgidl-serialization' if changes detected
+      - name: Install dependencies for omgidl-serialization
+        if: steps.filter_paths.outputs.omgidl_serialization == 'true'
+        run: |
+          yarn install
+          yarn plugin import version
+        working-directory: packages/omgidl-serialization
+
+      # Install dependencies for 'ros2idl-parser' if changes detected
+      - name: Install dependencies for ros2idl-parser
+        if: steps.filter_paths.outputs.ros2idl_parser == 'true'
+        run: |
+          yarn install
+          yarn plugin import version
+        working-directory: packages/ros2idl-parser
 
       # Conditional step to bump version for 'omgidl-parser'
       - name: Bump version in omgidl-parser package.json
@@ -84,17 +106,3 @@ jobs:
       - name: Push changes
         run: git push origin main
         if: steps.filter_paths.outputs.omgidl_parser == 'true' || steps.filter_paths.outputs.omgidl_serialization == 'true' || steps.filter_paths.outputs.ros2idl_parser == 'true'
-
-      - name: Bump version in root package.json
-        run: yarn version --new-version patch --no-git-tag-version
-
-      - name: Commit version bumps
-        id: commit_version_bumps
-        run: |
-          git add package.json yarn.lock
-          git commit -m "chore: bump versions in root package.json [skip actions]"
-          echo "commit_sha=$(git rev-parse HEAD)" >> $GITHUB_ENV
-
-      - name: Push changes
-        run: |
-          git push origin main
