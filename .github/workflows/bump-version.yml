@@ -64,9 +64,7 @@ jobs:
 
       # Install dependencies and bump version based on changes
       - name: Install dependencies and bump version
-        if: ${{ (steps.filter_paths.outputs.omgidl_parser == 'true' && matrix.package == 'omgidl-parser') ||
-                  (steps.filter_paths.outputs.omgidl_serialization == 'true' && matrix.package == 'omgidl-serialization') ||
-                  (steps.filter_paths.outputs.ros2idl_parser == 'true' && matrix.package == 'ros2idl-parser') }}
+        if: ${{ (steps.filter_paths.outputs.omgidl_parser == 'true' && matrix.package == 'omgidl-parser') || (steps.filter_paths.outputs.omgidl_serialization == 'true' && matrix.package == 'omgidl-serialization') || (steps.filter_paths.outputs.ros2idl_parser == 'true' && matrix.package == 'ros2idl-parser') }}
         run: |
           cd packages/${{ matrix.package }}
           yarn install
