@@ -54,7 +54,11 @@ jobs:
               - 'packages/omgidl-serialization/**'
             ros2idl_parser:
               - 'packages/ros2idl-parser/**'
+            omgidl_root:
+              - '**'
+              - '!packages/**'
 
+      # Install dependencies for 'omgidl-parser' if changes detected
       - name: Install dependencies for omgidl-parser
         if: steps.filter_paths.outputs.omgidl_parser == 'true'
         run: |
@@ -62,6 +66,7 @@ jobs:
           yarn plugin import version
         working-directory: packages/omgidl-parser
 
+      # Install dependencies for 'omgidl-serialization' if changes detected
       - name: Install dependencies for omgidl-serialization
         if: steps.filter_paths.outputs.omgidl_serialization == 'true'
         run: |
@@ -69,6 +74,7 @@ jobs:
           yarn plugin import version
         working-directory: packages/omgidl-serialization
 
+      # Install dependencies for 'ros2idl-parser' if changes detected
       - name: Install dependencies for ros2idl-parser
         if: steps.filter_paths.outputs.ros2idl_parser == 'true'
         run: |
@@ -76,20 +82,30 @@ jobs:
           yarn plugin import version
         working-directory: packages/ros2idl-parser
 
+      # Conditional step to bump version for 'omgidl-parser'
       - name: Bump version in omgidl-parser package.json
         if: steps.filter_paths.outputs.omgidl_parser == 'true'
         run: yarn version patch
         working-directory: packages/omgidl-parser
 
+      # Conditional step to bump version for 'omgidl-serialization'
       - name: Bump version in omgidl-serialization package.json
         if: steps.filter_paths.outputs.omgidl_serialization == 'true'
         run: yarn version patch
         working-directory: packages/omgidl-serialization
 
+      # Conditional step to bump version for 'ros2idl-parser'
       - name: Bump version in ros2idl-parser package.json
         if: steps.filter_paths.outputs.ros2idl_parser == 'true'
         run: yarn version patch
         working-directory: packages/ros2idl-parser
+
+      - name: Bump version in root package.json
+        if: steps.filter_paths.outputs.omgidl_root == 'true'
+        run: |
+          yarn install
+          yarn version patch
+        working-directory: .
 
       - name: Set up Git
         run: |
